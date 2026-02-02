@@ -1,0 +1,17 @@
+---
+title: "Data processing of cities.txt"
+author: "Cassandra Gunasekaram"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+*Here you can put any prior information, e.g. copyright note etc.*
+#  Workspace setup
+```{r markdown_setup, include=FALSE, echo=FALSE}
+rm(list = ls())
+knitr::opts_chunk$set(echo = TRUE,         # Show code in the output (good for reproducibility)
+                      message = FALSE,     # Hide messages (e.g., from library() calls)
+                      error = FALSE       # Stop rendering if there are errors)
+)
+set.seed(100)
+```
