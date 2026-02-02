@@ -10,8 +10,28 @@ output: pdf_document
 ```{r markdown_setup, include=FALSE, echo=FALSE}
 rm(list = ls())
 knitr::opts_chunk$set(echo = TRUE,         # Show code in the output (good for reproducibility)
-                      message = FALSE,     # Hide messages (e.g., from library() calls)
                       error = FALSE       # Stop rendering if there are errors)
 )
 set.seed(100)
+```
+
+Load libraries: set warning=FALSE to hide warnings.
+```{r libraries, warning=FALSE}
+library(here)               # manage directories
+library(dplyr)              # data manipulation
+library(ggplot2)            # plots
+library(viridis)            # colour palettes
+```
+
+Set directories (pathways to folders).
+```{r pathways}
+# where are we:
+getwd()
+
+# set directories
+dir_raw <- here("data", "raw")
+dir_processed <- here("data", "processed")
+dir_code <- here("code")
+dir.create(here("results"))
+dir_results <- here("results")
 ```
