@@ -11,3 +11,17 @@ get_log_bins <- function(xmin, xmax, n_bins = 30, base = 10) {
     length.out = n_bins + 1
   )
 }
+
+# function to average bins
+interval_mean <- function(x) {
+  # remove brackets and parentheses
+  x <- gsub("\\[|\\]|\\(|\\)", "", x)
+  
+  # split at comma
+  parts <- strsplit(x, ",")[[1]]
+  
+  # convert to numeric (handles scientific notation)
+  nums <- as.numeric(parts)
+  
+  mean(nums)
+}
