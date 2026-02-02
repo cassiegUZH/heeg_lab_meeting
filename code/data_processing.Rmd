@@ -1,6 +1,6 @@
 ---
 title: "Data processing of cities.txt"
-author: "Cassandra Gunasekaram"
+author: "Cassandra Gunasekaram & Onkar Sadekar"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
@@ -15,7 +15,15 @@ knitr::opts_chunk$set(echo = TRUE,         # Show code in the output (good for r
 set.seed(100)
 ```
 
-Load libraries: set warning=FALSE to hide warnings.
+Install packages
+```{r libraries, eval=FALSE}
+install.packages("here")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("viridis")
+```
+
+Load packages: set warning=FALSE to hide warnings.
 ```{r libraries, warning=FALSE}
 library(here)               # manage directories
 library(dplyr)              # data manipulation
@@ -29,9 +37,62 @@ Set directories (pathways to folders).
 getwd()
 
 # set directories
-dir_raw <- here("data", "raw")
-dir_processed <- here("data", "processed")
+dir_raw <- here("data", "raw_data")
+dir_processed <- here("data", "processed_data")
+dir_derived <- here("data", "derived_data")
 dir_code <- here("code")
-dir.create(here("results"))
+
+# Check if results folder exists, if not, create one.
+if(here("results")==FALSE){
+  dir.create(here("results"))
+} else{
+  print("Results already exists")
+}
 dir_results <- here("results")
 ```
+# Process raw file
+
+```{r inspect_raw}
+cities <- read.delim(file.path(dir_raw, "cities.txt"))
+cities_vec <- cities$X39105000
+
+# Explore
+summary(cities_vec)
+hist(cities_vec)
+
+# Filter for >10000
+cities_vec <- cities_vec[cities_vec > 10000]
+write.csv(cities_vec, file.path(dir_processed, "cities_filtered.csv"), 
+          row.names = FALSE)
+
+```
+
+# Derive from processed file
+```{r derive_densities}
+# First read file
+cities_filtered <- read.csv(file.path(dir_processed, "cities_filtered.csv"))
+
+source(file.path(dir_code, "get_logspaced_bins.R"))
+
+bins <- get_log_bins(min(cities_filtered$x), max(cities_filtered$x), n_bins = 27)
+
+counts <- table(cut(cities_filtered$x, breaks = bins, include.lowest = TRUE, right = FALSE))
+
+write.csv(counts, file.path(dir_derived, "logspaced_density.csv"),
+          row.names = FALSE)
+```
+
+```{r plot}
+densities <- read.csv(file.path(dir_derived, "logspaced_density.csv"))
+str(densities)
+densities$avg_bins <- get_interval_mean(densities$Var1)
+
+ggplot(densities, aes(x = log(avg_bins), y = log(Freq))) +
+  geom_bar(stat = "identity", fill = "salmon1") +
+  labs(x = "City population (log)", y = "Frequency (log)") +
+  ggtitle("City populations histogram") +
+  theme_classic()
+
+```
+
+
