@@ -8,8 +8,7 @@ output: pdf_document
 This Rmarkdown file includes an example of how to sort your code and workflow. You can then knit this document into a readable pdf, html, word etc.  
   
 You can insert text, tables, figures and code in these files, whereby all can be edited.   
-For example, you can use **bold** with `**bold`, or *cursive* with `*cursive*`,
-highlide `code` with ``code`` etc.  
+For example, you can use **bold** with `**bold**`, or *cursive* with `*cursive*`, etc.  
 To get text on a new line, use double space at the end of the line `  `.  
   
 You can insert lists as in other text editors:  
